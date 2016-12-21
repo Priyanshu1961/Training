@@ -22,7 +22,7 @@ class StudentData
         # Group by Student_ID
         @hash_array_group_by = []
         group_by_symbol = group_by.to_sym
-        if group_by.casecmp('student_id').zero? || group_by.casecmp('department').zero? || group_by.casecmp('year').zero?
+        if group_by.downcase == 'student_id' || group_by.downcase == 'department'  || group_by.downcase == 'year'
 
             htemp_groupby = {}
             @hash_array = @hash_array.sort_by { |hsh| hsh[group_by_symbol] }
@@ -212,7 +212,7 @@ class StudentData
     end
     # display_compare_student_data ends
 end # Class ends
-hysics_tota
+
 obj = StudentData.new
 obj.create_student_array
 
