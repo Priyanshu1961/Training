@@ -197,8 +197,12 @@ class StudentData
 
     # display_compare_student_data ends
     def calculate_change(curr_value, prev_value)
-        return '-' if curr_value == 0
-        ((curr_value - prev_value) * 100 / curr_value).abs
+        begin
+           average = ((curr_value - prev_value) * 100 / curr_value).abs
+           rescue ZeroDivisionError
+               average = '-'
+           end
+        average
     end
 end # Class ends
 
