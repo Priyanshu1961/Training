@@ -22,7 +22,7 @@ class StudentData
         # Group by Student_ID
         @hash_array_group_by = []
         group_by_symbol = group_by.to_sym
-        if group_by.downcase == 'student_id' || group_by.downcase == 'department'  || group_by.downcase == 'year'
+        if group_by.casecmp('student_id').zero? || group_by.casecmp('department').zero? || group_by.casecmp('year').zero?
 
             htemp_groupby = {}
             @hash_array = @hash_array.sort_by { |hsh| hsh[group_by_symbol] }
@@ -30,8 +30,7 @@ class StudentData
             physics_total = @hash_array[0][:physics]
             chemistry_total = @hash_array[0][:chemistry]
             count = 0
-            for num in 1...@hash_array.size
-
+            (1...@hash_array.size).each do |num|
                 if  num < @hash_array.size && @hash_array[num][group_by_symbol] == @hash_array[num - 1][group_by_symbol]
 
                     math_total += @hash_array[num][:maths]
@@ -55,8 +54,7 @@ class StudentData
 
                     # puts "Phase #{num} - #{math_average} #{physics_average} #{chemistry_average} "
                 end
-
-          end
+            end
             no_students = @hash_array.size - count
             math_average = math_total / no_students
             physics_average = physics_total / no_students
@@ -130,16 +128,14 @@ class StudentData
     def student_compare_data(compare_on, first_comprer_element, second_comparer_element, group_by, show_total)
         @hash_array = @hash_array.sort_by { |hsh| hsh[:year] }.reverse
         temp_arr = []
-        count = 0
         temp_year = @hash_array[0][:year]
         final_year = 0
-        @hash_array.each do |element|
-            count += 1
-            if count == 1 || element[:year] == temp_year
-                temp_arr.push(element[:student_id])
+        (0...@hash_array.size).each do |iter|
+            if  @hash_array[iter][:year] == temp_year
+                temp_arr.push(@hash_array[iter][:student_id])
             else
-                temp_arr.delete(element[:student_id])
-                final_year = element[:year]
+                temp_arr.delete(@hash_array[iter][:student_id])
+                final_year = @hash_array[iter][:year]
             end
         end
         array_push(student_id: temp_arr[0], department: 'a7', maths: 0, physics: 0, chemistry: 0, year: final_year)
@@ -157,60 +153,62 @@ class StudentData
     def display_compare_student_data(first_comprer_element, second_comparer_element, group_by, show_total)
         puts " |   #{group_by}   |    MATHS    |    PHYSICS    |    CHEMISTRY    |"
         temp = 0
-        count = 0
         math_curr = 0
         physics_curr = 0
         chemistry_curr = 0
         math_prev = 0
         physics_prev = 0
         chemistry_prev = 0
-        math_2016_total = 0
-        math_2015_total = 0
-        physics_2016_total = 0
-        physics_2015_total = 0
-        chemistry_2016_total = 0
-        chemistry_2015_total = 0
-        @hash_array.each do |element|
-            count += 1
-            if temp == 0 || element[element.keys[0]] != temp
-                puts " |   #{element[element.keys[0]]} |"
-                temp = element[element.keys[0]]
+        math_first_comprer_total = 0
+        math_second_comprer_total = 0
+        physics_first_comprer_total = 0
+        physics_second_comprer_total = 0
+        chemistry_first_comprer_total = 0
+        chemistry_second_comprer_total = 0
+        (0...@hash_array.size).each do |iter| # @hash_array.each do |element|
+            if temp == 0 || @hash_array[iter][:student_id] != temp
+                puts " |   #{@hash_array[iter][:student_id]} |"
+                temp = @hash_array[iter][:student_id]
 
             end # if -else ends
 
-            if element[:year] == first_comprer_element.to_i
-                math_curr = element[:maths]
-                physics_curr = element[:physics]
-                chemistry_curr = element[:chemistry]
+            if @hash_array[iter][:year] == first_comprer_element.to_i
+                math_curr = @hash_array[iter][:maths]
+                physics_curr = @hash_array[iter][:physics]
+                chemistry_curr = @hash_array[iter][:chemistry]
                 # find the total sum
-                math_2016_total += element[:maths]
-                physics_2016_total += element[:physics]
-                chemistry_2016_total += element[:chemistry]
+                math_first_comprer_total += @hash_array[iter][:maths]
+                physics_first_comprer_total += @hash_array[iter][:physics]
+                chemistry_first_comprer_total += @hash_array[iter][:chemistry]
 
-                puts " |   #{first_comprer_element} |   #{element[:maths]}  |   #{element[:physics]} |   #{element[:chemistry]} |"
-            elsif element[:year] == second_comparer_element.to_i
-                math_prev = element[:maths]
-                physics_prev = element[:physics]
-                chemistry_prev = element[:chemistry]
+                puts " |   #{first_comprer_element} |   #{@hash_array[iter][:maths]}  |   #{@hash_array[iter][:physics]} |   #{@hash_array[iter][:chemistry]} |"
+            elsif @hash_array[iter][:year] == second_comparer_element.to_i
+                math_prev = @hash_array[iter][:maths]
+                physics_prev = @hash_array[iter][:physics]
+                chemistry_prev = @hash_array[iter][:chemistry]
                 # find the total sum
-                math_2015_total += element[:maths]
-                physics_2015_total += element[:physics]
-                chemistry_2015_total += element[:chemistry]
+                math_second_comprer_total += @hash_array[iter][:maths]
+                physics_second_comprer_total += @hash_array[iter][:physics]
+                chemistry_second_comprer_total += @hash_array[iter][:chemistry]
 
-                puts " |   #{second_comparer_element} |   #{element[:maths]}  |   #{element[:physics]} |   #{element[:chemistry]} |"
+                puts " |   #{second_comparer_element} |   #{@hash_array[iter][:maths]}  |   #{@hash_array[iter][:physics]} |   #{@hash_array[iter][:chemistry]} |"
             end
 
-            if count.even? || count == @hash_array.size
-                puts " |   Change   |   #{((math_curr - math_prev) * 100 / math_curr).abs} % |   #{((physics_curr - physics_prev) * 100 / physics_curr).abs} % |   #{((chemistry_curr - chemistry_prev) * 100 / chemistry_curr).abs} % |"
+            if (iter + 1).even? || iter == @hash_array.size
+                puts " |   Change   |   #{calculate_change(math_curr, math_prev)} % |   #{calculate_change(physics_curr, physics_prev)} % |   #{calculate_change(chemistry_curr, chemistry_prev)} % |"
             end
         end # loop end
         if show_total.to_s.casecmp('TRUE').zero?
-            puts " |   Total (2016)   |   #{math_2016_total} |   #{physics_2016_total}  |   #{chemistry_2016_total} |"
-            puts " |   Total (2016)   |   #{math_2015_total} |   #{physics_2015_total}  |   #{chemistry_2015_total} |"
-            puts " |   Total          |   #{math_2016_total + math_2015_total} |   #{physics_2016_total + physics_2015_total}  |   #{chemistry_2016_total + chemistry_2015_total} |"
+            puts " |   Total (2016)   |   #{math_first_comprer_total} |   #{physics_first_comprer_total}  |   #{chemistry_first_comprer_total} |"
+            puts " |   Total (2016)   |   #{math_second_comprer_total} |   #{physics_second_comprer_total}  |   #{chemistry_second_comprer_total} |"
+            puts " |   Total          |   #{math_first_comprer_total + math_second_comprer_total} |   #{physics_first_comprer_total + physics_second_comprer_total}  |   #{chemistry_first_comprer_total + chemistry_second_comprer_total} |"
         end
     end
+
     # display_compare_student_data ends
+    def calculate_change(curr_value, prev_value)
+        ((curr_value - prev_value) * 100 / curr_value).abs
+    end
 end # Class ends
 
 obj = StudentData.new
