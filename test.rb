@@ -22,7 +22,7 @@ class StudentData
         # Group by Student_ID
         @hash_array_group_by = []
         group_by_symbol = group_by.to_sym
-        if group_by.casecmp('student_id').zero? || group_by.casecmp('department').zero? || group_by.casecmp('year').zero?
+        if %w(student_id department year).include? group_by.downcase
 
             htemp_groupby = {}
             @hash_array = @hash_array.sort_by { |hsh| hsh[group_by_symbol] }
@@ -31,7 +31,7 @@ class StudentData
             chemistry_total = @hash_array[0][:chemistry]
             count = 0
             (1...@hash_array.size).each do |num|
-                if  num < @hash_array.size && @hash_array[num][group_by_symbol] == @hash_array[num - 1][group_by_symbol]
+                if  @hash_array[num][group_by_symbol] == @hash_array[num - 1][group_by_symbol]
 
                     math_total += @hash_array[num][:maths]
                     physics_total += @hash_array[num][:physics]
@@ -90,7 +90,6 @@ class StudentData
         total_maths = 0
         total_chemistry = 0
         display_fields.map!(&:downcase)
-        print_student_array
         print " |   #{group_by}   "
         display_fields.each do |field|
             print " |#{field}       "
@@ -153,60 +152,52 @@ class StudentData
     def display_compare_student_data(first_comprer_element, second_comparer_element, group_by, show_total)
         puts " |   #{group_by}   |    MATHS    |    PHYSICS    |    CHEMISTRY    |"
         temp = 0
-        math_curr = 0
-        physics_curr = 0
-        chemistry_curr = 0
-        math_prev = 0
-        physics_prev = 0
-        chemistry_prev = 0
         math_first_comprer_total = 0
         math_second_comprer_total = 0
         physics_first_comprer_total = 0
         physics_second_comprer_total = 0
         chemistry_first_comprer_total = 0
         chemistry_second_comprer_total = 0
+        math = {}
+        phys = {}
+        chem = {}
         (0...@hash_array.size).each do |iter| # @hash_array.each do |element|
             if temp == 0 || @hash_array[iter][:student_id] != temp
                 puts " |   #{@hash_array[iter][:student_id]} |"
                 temp = @hash_array[iter][:student_id]
 
             end # if -else ends
+            year = @hash_array[iter][:year] == first_comprer_element.to_i ? first_comprer_element : second_comparer_element
+            state = @hash_array[iter][:year] == first_comprer_element.to_i ? 'curr' : 'prev'
 
-            if @hash_array[iter][:year] == first_comprer_element.to_i
-                math_curr = @hash_array[iter][:maths]
-                physics_curr = @hash_array[iter][:physics]
-                chemistry_curr = @hash_array[iter][:chemistry]
-                # find the total sum
-                math_first_comprer_total += @hash_array[iter][:maths]
-                physics_first_comprer_total += @hash_array[iter][:physics]
-                chemistry_first_comprer_total += @hash_array[iter][:chemistry]
+            math['total'] = {} if math['total'].nil?
+            phys['total'] = {} if phys['total'].nil?
+            chem['total'] = {} if chem['total'].nil?
+            math['total'][year] = math['total'][year].to_i + @hash_array[iter][:maths]
+            phys['total'][year] = phys['total'][year].to_i + @hash_array[iter][:physics]
+            chem['total'][year] = chem['total'][year].to_i + @hash_array[iter][:chemistry]
 
-                puts " |   #{first_comprer_element} |   #{@hash_array[iter][:maths]}  |   #{@hash_array[iter][:physics]} |   #{@hash_array[iter][:chemistry]} |"
-            elsif @hash_array[iter][:year] == second_comparer_element.to_i
-                math_prev = @hash_array[iter][:maths]
-                physics_prev = @hash_array[iter][:physics]
-                chemistry_prev = @hash_array[iter][:chemistry]
-                # find the total sum
-                math_second_comprer_total += @hash_array[iter][:maths]
-                physics_second_comprer_total += @hash_array[iter][:physics]
-                chemistry_second_comprer_total += @hash_array[iter][:chemistry]
+            math[state] = @hash_array[iter][:maths]
+            phys[state] = @hash_array[iter][:physics]
+            chem[state] = @hash_array[iter][:chemistry]
+            # find the total sum
+            next unless iter.odd?
+            puts " |   #{first_comprer_element} |   #{math['curr']}  |   #{phys['curr']} |   #{chem['curr']} |"
+            puts " |   #{second_comparer_element} |   #{math['prev']}  |   #{phys['prev']} |   #{chem['prev']} |"
 
-                puts " |   #{second_comparer_element} |   #{@hash_array[iter][:maths]}  |   #{@hash_array[iter][:physics]} |   #{@hash_array[iter][:chemistry]} |"
-            end
-
-            if (iter + 1).even? || iter == @hash_array.size
-                puts " |   Change   |   #{calculate_change(math_curr, math_prev)} % |   #{calculate_change(physics_curr, physics_prev)} % |   #{calculate_change(chemistry_curr, chemistry_prev)} % |"
-            end
+            puts " |   Change   |   #{calculate_change(math['curr'], math['prev'])} % |   #{calculate_change(phys['curr'], phys['prev'])} % |   #{calculate_change(chem['curr'], chem['prev'])} % |"
         end # loop end
+
         if show_total.to_s.casecmp('TRUE').zero?
-            puts " |   Total (2016)   |   #{math_first_comprer_total} |   #{physics_first_comprer_total}  |   #{chemistry_first_comprer_total} |"
-            puts " |   Total (2016)   |   #{math_second_comprer_total} |   #{physics_second_comprer_total}  |   #{chemistry_second_comprer_total} |"
-            puts " |   Total          |   #{math_first_comprer_total + math_second_comprer_total} |   #{physics_first_comprer_total + physics_second_comprer_total}  |   #{chemistry_first_comprer_total + chemistry_second_comprer_total} |"
+            puts " |   Total (2016)   |   #{math['total'][first_comprer_element]} |   #{phys['total'][first_comprer_element]}  |   #{chem['total'][first_comprer_element]} |"
+            puts " |   Total (2015)   |   #{math['total'][second_comparer_element]} |   #{phys['total'][second_comparer_element]}  |   #{chem['total'][second_comparer_element]} |"
+            puts " |   Total          |   #{math['total'][first_comprer_element] + math['total'][second_comparer_element]} |   #{phys['total'][first_comprer_element] + phys['total'][second_comparer_element]}  |   #{chem['total'][first_comprer_element] + chem['total'][second_comparer_element]} |"
         end
     end
 
     # display_compare_student_data ends
     def calculate_change(curr_value, prev_value)
+        return '-' if curr_value == 0
         ((curr_value - prev_value) * 100 / curr_value).abs
     end
 end # Class ends
