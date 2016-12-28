@@ -1,0 +1,24 @@
+<h1>Orders List</h1>
+<% if @orders.blank?  %>
+No orders placed for this customer
+<% else %>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <% @orders.each do |order| %>
+        <tr>
+            <td><%= order.item_name %></td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>
+<% end %>
+<br>
+
+<br>
+<p><%= link_to 'Back', customers_path %></p>
