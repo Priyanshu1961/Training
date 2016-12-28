@@ -1,0 +1,32 @@
+<h1> Editing Student Data</h1>
+<%= form_for :college,url: college_path(@college) , method: :patch do |f| %>
+
+<% if @college.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@college.errors.count, "error") %> prohibited
+        this college from being saved:
+      </h2>
+      <ul>
+        <% @college.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+<p>
+    <%= f.label :name %><br>
+    <%= f.text_field :name ,:readonly => true , disabled: true%>
+</p>
+
+<p>
+    <%= f.label :established_year %><br>
+    <%= f.number_field :extended_year %>
+</p>
+
+<p>
+    <%= f.submit %>
+</p>
+<% end %>
+<%= link_to 'Back', colleges_path %>

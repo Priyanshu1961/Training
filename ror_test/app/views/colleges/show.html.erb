@@ -1,0 +1,30 @@
+
+<p>
+  <strong>College Name:</strong>
+  <%= @college.name %>
+</p>
+
+<p>
+  <strong>Extended year:</strong>
+  <%= @college.extended_year %>
+</p>
+
+<h2>Students List</h2>
+<table>
+  <tr>
+    <th>Name</th>
+
+        <th
+  </tr>
+
+  <% @students.each do |student| %>
+    <tr>
+      <td><%= student.name %></td>
+      </tr>
+  <% end %>
+</table>
+
+
+
+<%= link_to 'Back', colleges_path %>
+<%= link_to 'Edit', edit_college_path(@college) %>
