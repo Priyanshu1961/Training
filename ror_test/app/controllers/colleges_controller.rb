@@ -17,7 +17,7 @@ class CollegesController < ApplicationController
 
     def show
         @college = College.find(params[:id])
-        @students = Student.where('college_name LIKE ?', "%#{@college.name}%")
+        @students = Student.select('name', 'id').where('college_name LIKE ?', "%#{@college.name}%")
     end
 
     def create
