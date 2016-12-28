@@ -1,0 +1,31 @@
+<h1>Listing Students</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Department</th>
+    <th>Maths</th>
+    <th>Physics</th>
+    <th>Chemistry</th>
+    <th>College Name</th>
+    <th>Extended_sid </th>
+  </tr>
+
+  <% @students.each do |student| %>
+    <tr>
+      <td><%= student.name %></td>
+      <td><%= student.department %></td>
+      <td><%= student.maths %></td>
+      <td><%= student.physics %></td>
+      <td><%= student.chemistry %></td>
+      <td><%= student.college_name %></td>
+      <td><%= student.id.to_s+"_"+student.college_name[0...2] %></td>
+      <td><%= link_to 'Show', student_path(student) %></td>
+      <td><%= link_to 'Edit', edit_student_path(student) %></td>
+      <td><%= link_to 'Destroy', student_path(student),
+             method: :delete,
+             data: { confirm: 'Are you sure?' } %></td>
+    </tr>
+  <% end %>
+</table>
+<%= link_to 'New student', new_student_path %>

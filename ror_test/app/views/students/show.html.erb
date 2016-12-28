@@ -1,0 +1,24 @@
+<p>
+  <strong>Name:</strong>
+  <%= @student.name %>
+</p>
+
+<p>
+  <strong>Department:</strong>
+  <%= @student.department %>
+</p>
+
+<strong>Maths:</strong>
+<%= @student.maths %>
+</p>
+
+<strong>Physics:</strong>
+<%= @student.physics %>
+</p>
+
+<strong>Chemistry:</strong>
+<%= @student.chemistry %>
+</p>
+
+<%= link_to 'Edit', edit_student_path(@student) %>
+<%= link_to 'Back', students_path %>
