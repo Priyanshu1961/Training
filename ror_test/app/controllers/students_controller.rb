@@ -5,20 +5,18 @@ class StudentsController < ApplicationController
 
     def index
         @students = Student.all
-        
-      end
+    end
 
     def edit
         @student = Student.find(params[:id])
-end
+    end
 
     def show
         @student = Student.find(params[:id])
-      end
+    end
 
     def create
         @student = Student.new(student_params)
-
         if @student.save
             redirect_to @student
         else
@@ -33,15 +31,13 @@ end
         else
             render 'edit'
         end
-end
+      end
 
-def destroy
-    @student = Student.find(params[:id])
-    @student.destroy
-
-    redirect_to students_path
-  end
-
+    def destroy
+        @student = Student.find(params[:id])
+        @student.destroy
+        redirect_to students_path
+      end
 
     private
 

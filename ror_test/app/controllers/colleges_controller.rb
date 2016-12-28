@@ -5,34 +5,29 @@ class CollegesController < ApplicationController
 
     def index
         if params[:search]
-
-          @colleges = College.where("name LIKE ?", "%#{params[:search]}%")
+            @colleges = College.where('name LIKE ?', "%#{params[:search]}%")
         else
-          @colleges=College.all
+            @colleges = College.all
         end
-  end
+     end
 
     def edit
         @college = College.find(params[:id])
-  end
+    end
 
     def show
         @college = College.find(params[:id])
-
-         @students = Student.where("college_name LIKE ?", "%#{@college.name}%")
-
-
-   end
+        @students = Student.where('college_name LIKE ?', "%#{@college.name}%")
+    end
 
     def create
         @college = College.new(college_params)
-
         if @college.save
             redirect_to @college
         else
             render 'new'
+        end
      end
-    end
 
     def update
         @college = College.find(params[:id])
@@ -45,9 +40,8 @@ class CollegesController < ApplicationController
 
     def destroy
         @college = College.find(params[:id])
-        Student.where(:college_name => "#{@college.name}" ).destroy_all
+        Student.where(college_name: @college.name.to_s).destroy_all
         @college.destroy
-
         redirect_to colleges_path
       end
 
