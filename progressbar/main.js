@@ -13,8 +13,9 @@ function move() {
   function frame() {
     if (width >= 100) {
       clearInterval(id);
+      document.getElementById("barButton").disabled = false;
     } else {
-      console.log(id)
+      document.getElementById("barButton").disabled = true;
       width++;
       elem.style.width = width + '%';
       document.getElementById("label").innerHTML = width * 1  + '%';
