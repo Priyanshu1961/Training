@@ -17,11 +17,13 @@ class PrimeCheck {
 }
 
 primecheck = new PrimeCheck();
+$(document).ready(function() {
+    $("#btn").click(function() {
+        value = $('#number')[0].value;
 
-function checkPrime() {
-    value = document.getElementById("number").value;
-    if (!primecheck.check(value)) {
-        primecheck.isPrime(value);
-    }
-    document.getElementById("message").innerHTML = primecheck.check(value);
-}
+        if (!primecheck.check(value)) {
+            primecheck.isPrime(value);
+        }
+      $("#message")[0].innerHTML = primecheck.check(value);
+    });
+});
