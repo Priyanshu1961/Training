@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<script  type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<style>
+#myProgress {
+  position: relative;
+  width: 100%;
+  height: 30px;
+  background-color: #ddd;
+}
+
+#myBar {
+  position: absolute;
+  width: 0%;
+  height: 100%;
+  background-color: #4CAF50;
+}
+
+#label {
+  text-align: center;
+  line-height: 30px;
+  color: white;
+}
+</style>
+
+<body>
+
+<h1>JavaScript Progress Bar</h1>
+
+<div id="myProgress">
+  <div id="myBar">
+    <div id="label">0%</div>
+  </div>
+</div>
+
+<br>
+<button  id="barButton" >Click Me</button>
+<br><br><br><br><br><br><br><br><br>
+
+<input type="button" value="Count" id="countButton" />
+<p>The button was pressed <span id="displayCount">0</span> times.</p>
+</body>
+<script type="text/javascript" src="main.js"></script>
+</html>
