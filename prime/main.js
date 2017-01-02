@@ -1,29 +1,36 @@
 class PrimeCheck {
-    constructor() {
-        this.primeObj = {};
+
+    check(value, primeObj) {
+
+        return primeObj[value];
     }
-    check(value) {
-        return this.primeObj[value];
-    }
-    isPrime(value) {
+    isPrime(value,primeObj) {
         for (var i = 2; i <= Math.sqrt(value); i++) {
             if (value % i === 0) {
-                this.primeObj[value] = "Number is not prime";
+                primeObj[value] = "Number is not prime";
                 return;
             }
         }
-        this.primeObj[value] = "Number is  prime";
+        primeObj[value] = "Number is  prime";
     }
 }
 
 primecheck = new PrimeCheck();
 $(document).ready(function() {
+
+    var add = (function() {
+        var primeObj = {};
+        return function() {
+            return primeObj;
+        }
+    })();
     $("#btn").click(function() {
+
         value = $('#number')[0].value;
 
-        if (!primecheck.check(value)) {
-            primecheck.isPrime(value);
+        if (!primecheck.check(value, add())) {
+            primecheck.isPrime(value, add());
         }
-      $("#message")[0].innerHTML = primecheck.check(value);
+        $("#message")[0].innerHTML = primecheck.check(value, add());
     });
 });
